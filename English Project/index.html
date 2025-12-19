@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Project</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== GENERAL ===== */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(270deg, #74ebd5, #9face6, #f6d365);
+    background-size: 600% 600%;
+    animation: gradientAnimation 90s ease infinite;
+}
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ===== WELCOME ===== */
+#welcome h1 {
+    font-size: 52px;
+    font-weight: 700;
+    text-align: center;
+    color: #ff8c42;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+}
+
+/* ===== PAGE STYLING ===== */
+.page {
+    display: none;
+    padding: 120px 20px 60px;
+    animation: fade 0.6s;
+}
+.page.active { display: block; }
+@keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== CARD ===== */
+.card {
+    max-width: 950px;
+    margin: auto;
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 45px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+}
+.card p, .card h2 {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.8;
+    font-size: 18px;
+    color: #2c3e50;
+}
+.card img {
+    width: 100%;
+    border-radius: 15px;
+    margin: 25px 0;
+    border: 4px solid #eee;
+}
+h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+h2 { color: #34495e; margin-top: 40px; }
+
+/* ===== THEMES ===== */
+/* Traditional Music */
+.theme-music .card { background: linear-gradient(to bottom right, #fff3e0, #ffe0b2); }
+.theme-music h1, .theme-music h2 { color: #8e3b1c; }
+/* Volunteer */
+.theme-volunteer .card { background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9); }
+.theme-volunteer h1, .theme-volunteer h2 { color: #1b5e20; }
+/* Classroom Invention */
+.theme-invention .card { background: linear-gradient(to bottom right, #e3f2fd, #ede7f6); }
+.theme-invention h1, .theme-invention h2 { color: #283593; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to bottom, #2c3e50, #34495e);
+    overflow: hidden;
+    transition: width 0.4s;
+    padding-top: 80px;
+    z-index: 999;
+}
+.sidebar a {
+    display: block;
+    padding: 18px 30px;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+.sidebar a:hover { background-color: rgba(255,255,255,0.15); }
+.sidebar a i {
+    margin-right: 10px;
+    font-size: 18px;
+    vertical-align: middle;
+    color: #ffd700;
+}
+.sidebar a:nth-child(1) i { color: #ffffff; }
+.sidebar a:nth-child(2) i { color: #8e3b1c; }
+.sidebar a:nth-child(3) i { color: #1b5e20; }
+.sidebar a:nth-child(4) i { color: #283593; }
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 15px;
+    color: white;
+    background: rgba(0,0,0,0.25);
+}
+
+/* ===== HAMBURGER ===== */
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 35px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 1001;
+}
+.menu-btn span {
+    display: block;
+    height: 4px;
+    width: 100%;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.4s ease;
+}
+.menu-btn.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+.menu-btn.open span:nth-child(2) { opacity: 0; }
+.menu-btn.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* ===== OVERLAY ===== */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 998;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Overlay -->
+<div id="overlay" onclick="closeMenu()"></div>
+
+<!-- Hamburger Button -->
+<div class="menu-btn" id="menu-btn">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+    <a onclick="showPage('welcome')"><i class="fas fa-home"></i> Welcome</a>
+    <a onclick="showPage('music')"><i class="fas fa-music"></i> Traditional Music</a>
+    <a onclick="showPage('volunteer')"><i class="fas fa-hands-helping"></i> Volunteer Project</a>
+    <a onclick="showPage('invention')"><i class="fas fa-lightbulb"></i> Classroom Invention</a>
+</div>
+
+
+<!-- WELCOME -->
+<div id="welcome" class="page active">
+    <div class="card">
+        <h1>Welcome</h1>
+        <p style="text-align:center;font-size:18px;">
+            Welcome to my team's English project website.  
+            This website presents three different topics that are meaningful and useful.
+            Please use the menu to explore each project in detail.😎😎
+        </p>
+    </div>
+</div>
+
+<!-- TRADITIONAL MUSIC -->
+<div id="music" class="page theme-music">
+    <div class="card">
+        <h1><i class="fas fa-music"></i> Traditional Music</h1>
+<h2>Introduction</h2>
+<img src="image/music1.jpg" alt="Traditional music performance">
+<p>
+Traditional music is an important part of every country's culture. 
+It has been passed down from generation to generation and reflects the lifestyle, beliefs, and emotions of people in the past. 
+Every region often has its own instruments, songs, and singing styles.
+</p>
+
+<h2>History and Instruments</h2>
+<img src="image/music2.jpg" alt="Traditional instruments">
+<p>
+Many traditional instruments are handmade and have been used for hundreds of years, such as flutes, drums, string instruments, and xylophones. 
+Each instrument has a unique sound, and songs often tell stories about daily life, nature, historical events, or legends. 
+Traditional music festivals are common and help preserve this cultural heritage.
+</p>
+
+<h2>Current Situation</h2>
+<img src="image/music3.jpg" alt="Music festival">
+<p>
+Today, traditional music faces competition from modern music and digital entertainment. 
+However, many young people are starting to learn traditional instruments and perform at schools or cultural events. 
+There are programs to teach music in villages and cities, helping to keep the tradition alive.
+</p>
+
+<h2>Benefits</h2>
+<p>
+Learning traditional music improves creativity, concentration, and appreciation of cultural history. 
+Performing or listening to it can also relieve stress and connect communities through shared experiences.
+</p>
+    </div>
+</div>
+
+<!-- VOLUNTEER PROJECT -->
+<div id="volunteer" class="page theme-volunteer">
+    <div class="card">
+        <h1><i class="fas fa-hands-helping"></i> A Volunteer Project</h1>
+
+
+<h2>Introduction</h2>
+<img src="image/volunteer1.jpg" alt="Volunteering group">
+<p>
+Volunteer projects are activities where people freely give their time and skills to help others. 
+These projects can focus on education, environmental protection, health care, or community development. 
+They are often organized by schools, community centers, or social organizations.
+</p>
+
+<h2>Types of Volunteer Work</h2>
+<img src="image/volunteer2.jpg" alt="Volunteers helping children">
+<p>
+Volunteers may help clean parks, plant trees, visit orphanages, teach underprivileged children, or support elderly people. 
+Each type of work has its own challenges and rewards. 
+For example, teaching children requires patience, while cleaning a park helps improve the environment.
+</p>
+
+<h2>Current Situation</h2>
+<img src="image/volunteer3.jpg" alt="Community volunteering">
+<p>
+Many students join volunteer projects to gain experience and contribute to society. 
+Social media also helps volunteers organize events and recruit participants. 
+Despite busy school schedules, more and more young people are willing to participate in meaningful volunteer activities.
+</p>
+
+<h2>Benefits</h2>
+<p>
+Volunteering develops responsibility, empathy, and teamwork. 
+It also strengthens social connections and improves communication skills. 
+Additionally, it makes communities more friendly, safe, and supportive.
+</p>
+
+    </div>
+</div>
+
+<!-- INVENTION -->
+<div id="invention" class="page theme-invention">
+    <div class="card">
+        <h1><i class="fas fa-lightbulb"></i> Invention for the Classroom</h1>
+
+
+<h2>Introduction</h2>
+<img src="image/invention1.jpg" alt="Classroom invention">
+<p>
+Classroom inventions are tools or devices designed to make teaching and learning easier and more effective. 
+They can be physical devices, software applications, or digital platforms. 
+The main goal is to make lessons more interactive, engaging, and understandable.
+</p>
+
+<h2>Examples</h2>
+<img src="image/invention2.jpg" alt="Smartboard in classroom">
+<p>
+Examples of classroom inventions include smart boards, tablets, educational apps, online quizzes, and interactive whiteboards. 
+These tools allow teachers to explain complex subjects clearly and help students learn at their own pace. 
+Some inventions, like interactive simulations, let students experience concepts in a practical way.
+</p>
+
+<h2>Current Situation</h2>
+<img src="image/invention3.jpg" alt="Students using technology">
+<p>
+Many schools now integrate technology in everyday lessons. 
+However, not all students have access to advanced devices, and teachers need training to use them effectively. 
+Governments and organizations are working to provide resources so that all students can benefit from educational inventions.
+</p>
+
+<h2>Benefits</h2>
+<p>
+Classroom inventions make learning more engaging, improve students' understanding, and encourage creativity. 
+They also help teachers save time and track student progress more efficiently. 
+Ultimately, these inventions can enhance the overall quality of education and prepare students for the future.
+</p>
+
+    </div>
+</div>
+
+<footer>
+    Thank you for watching 💙<br>
+    Made by Team 1 class 10A1
+</footer>
+
+<script>
+const menuBtn = document.getElementById('menu-btn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+menuBtn.addEventListener('click', () => {
+    if(sidebar.style.width === '260px'){
+        sidebar.style.width = '0';
+        overlay.style.display = 'none'; // thêm dòng này
+    } else {
+        sidebar.style.width = '260px';
+        overlay.style.display = 'block'; // bật overlay
+    }
+    menuBtn.classList.toggle('open');
+});
+
+
+function closeMenu() {
+    sidebar.style.width = '0';
+    overlay.style.display = 'none';
+    menuBtn.classList.remove('open');
+}
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    sidebar.style.width = '0';
+    menuBtn.classList.remove('open');
+
+    // Ẩn overlay khi chuyển trang
+    document.getElementById('overlay').style.display = 'none';
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+
+</script>
+
+</body>
+</html>
